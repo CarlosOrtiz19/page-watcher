@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class EmailService {
@@ -21,12 +20,19 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(String email) throws Exception {
+    public void sendEmail(String email, String url) throws Exception {
+        String body = "<h2>Hello Darly</h2>" +
+                "<br/><p>Puede ser que ya abrieron los examanes !!! Go, go, go</p>" +
+                "<br/><p>Para que llegues mas rapido ....</p>" +
+                "<br/>\n<a href=" + url + "> Click me</a>" +
+                "<br/> :)";
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(email);
-        helper.setSubject("subject");
-        helper.setText("il y a eu un changement",true);
+        helper.setSubject("Algo cambio en la pagina de NDEB !!");
+        helper.setText(body, true);
+
         helper.setSentDate(new Date());
         emailSender.send(message);
         LOGGER.info("Mail sent to ==> " + email);

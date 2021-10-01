@@ -1,6 +1,7 @@
 package com.pagewatcher.controller;
 
-import com.pagewatcher.service.WatchPageService;
+import com.pagewatcher.entity.AccountInformation;
+import com.pagewatcher.service.PageWatcherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/watch")
 public class WatchPageController {
     @Autowired
-    WatchPageService watchPageService;
+    PageWatcherService pageWatcherService;
 
-    @GetMapping("/run")
-    public ResponseEntity<String> getCandidatureById(@RequestParam String url,@RequestParam String session,
-                                                     @RequestParam  String cookie) throws Exception {
-            String response = watchPageService.runScript(url,session,cookie);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+    @GetMapping("/start")
+    public ResponseEntity<String> getCandidatureById(@RequestBody AccountInformation accountInformation) throws Exception {
+        pageWatcherService.saveFirstCheck(accountInformation);
+        return ResponseEntity.status(HttpStatus.OK).body("la página será monitoreada cada 10 minutos, " +
+                "si se detecta algún cambio se enviará un mensaje al correo electrónico " +
+                accountInformation.getEmail());
     }
 }
